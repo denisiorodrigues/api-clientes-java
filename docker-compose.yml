@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: clinesdb
+      POSTGRES_USER: clinesuser
+      POSTGRES_PASSWORD: clinespass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/clinesdb
+      SPRING_DATASOURCE_USERNAME: clinesuser
+      SPRING_DATASOURCE_PASSWORD: clinespass
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
